@@ -111,7 +111,7 @@ public class SobelEdgeDetector {
 	    double angle;
 	    
 	    
-	    //Selectionner les 3 points
+	    //Selectionner 3 points
 		Point A=new Point(-10,0,0);
 		Point B=new Point(10,12,1);
 		Point C=new Point(351,1,1);
