@@ -33,36 +33,62 @@ public class Test {
 		cercle.setNombreDIterations(10000);
 		
 		//Niveau de gradient
-		detector.setGradientLevel(500);
+		detector.setGradientLevel(100);
 		
-		//Charge l'image
-				BufferedImage frame = null;
-				try {
-					frame = ImageIO.read(new File("C://Users//Patrick//workspace//test.png"));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		//Nombre de points permettant de dire qu'il y a un objet sur la table
+		int nbMaximal = 2000;
+		
+	//Charge l'image
+		BufferedImage frame = null;
+		try {
+			frame = ImageIO.read(new File("C://Users//Patrick//workspace//data//test.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	
-	//S'applique a  l'image
+	//S'applique a l'image
 		detector.setSourceImage(frame);
 		detector.process();
 		BufferedImage edges = detector.getEdgesImage();
 			
-	//Enregistre de l'image des contours
-		File outputfile1 = new File("C://Users//Patrick//workspace//Contours.png");
+	//Enregistre l'image des contours
+		File outputfile1 = new File("C://Users//Patrick//workspace//data//testResult1.png");
 		try {
 			ImageIO.write(edges, "png", outputfile1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}			 
-			
+		}			 		
 		
 	//Application de RANSAC
 		ArrayList<Point> listeDePoints = new ArrayList<Point>();
 		listeDePoints=SobelEdgeDetector.getListPoints();
 		cercle.ransac(listeDePoints);
+		//Cercle detecte
+		detector.setCercleTrace(1);
+		
+	//Nouvelle application de SOBEL dans le cercle detecte plus haut afin de detecter la presence ou non d'objets
+		detector.process();
+		BufferedImage edges2 = detector.getEdgesImage();
+		
+	//Enregistre l'image des contours
+		File outputfile2 = new File("C://Users//Patrick//workspace//data//testResult2.png");
+		try {
+			ImageIO.write(edges2, "png", outputfile2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	//Examen du nombre de points
+		int nbPoints = detector.getNbPoints();
+		if(nbPoints>nbMaximal){
+			System.out.println("Il y a des objets sur la table");
+		}
+		else
+			System.out.println("Il n'y a pas d'objets");
+		
 		
 	//Definir le meilleur cercle
 		Circle bestCircle = cercle.getBestCircle();
@@ -78,10 +104,10 @@ public class Test {
 		g2d.drawImage(frame, 0, 0, null);			
 		g2d.dispose();
 			
-	//Enregistre l'image avec tracé du cercle
-		File outputfile2 = new File("C://Users//Patrick//workspace//traceDuCercle.png");
+	//Enregistre l'image avec tracï¿½ du cercle
+		File outputfile3 = new File("C://Users//Patrick//workspace//data//testResultCircle.png");
 		try {
-			ImageIO.write(frame, "png", outputfile2);
+			ImageIO.write(frame, "png", outputfile3);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

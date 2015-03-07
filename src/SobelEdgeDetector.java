@@ -10,6 +10,9 @@ public class SobelEdgeDetector {
 	private int width;
 	private int picsize;
 	private int gradlvl;
+	private int nbpoints;
+	private int cercleTrace;
+	
 	private int[] data;
 	private int[] magnitude;
 	private BufferedImage sourceImage;
@@ -65,6 +68,14 @@ public class SobelEdgeDetector {
 		gradlvl=gradient;
 	}
 	
+	public int getNbPoints(){
+		return nbpoints;
+	}
+	
+	public void setCercleTrace(int trace)	{
+		cercleTrace=trace;
+	}
+	
 											/********************************/
 											/********* Les méthodes ********/
 											/*******************************/
@@ -93,25 +104,64 @@ public class SobelEdgeDetector {
 	
 	//Calcul des gradients
 	private void computeGradients() {
-		int     i, j, nrows, ncols, img[][], nbpoints=0;
+		int     i, j, nrows, ncols, img[][];
 	    double  Gx[][], Gy[][], G[][];
+
+	    double r=0;
+	    double angle;
+	    
+	    
+	    //Selectionner les 3 points
+		Point A=new Point(-10,0,0);
+		Point B=new Point(10,12,1);
+		Point C=new Point(351,1,1);
+				
+		//Tracer un cercle a partir de 3 points
+		int x=0,y=0;
+		double radius=0;
+		nbpoints=0;
+			
+		if(cercleTrace==1){
+			Circle cercle=new Circle(A,B,C);
+			Circle bestCircle = cercle.getBestCircle();
+			x = bestCircle.circleCenter().getX();
+			y = bestCircle.circleCenter().getY();
+			radius = bestCircle.radius();
+		}
 	    
 	    nrows=sourceImage.getHeight();
 	    ncols=sourceImage.getWidth();
 	    img = new int[nrows][ncols];
 	    
-	    for (i=0; i<nrows; i++) {
+	    
+	    if(cercleTrace==1){
+	    	//85% du rayon pour eviter les effets de bord et rester bien dans la table
+	    	for (r=0; r<0.85*radius; r=r+1){
+	    		for (angle=0; angle<360; angle=angle+0.1){
+				
+	    			i=y-(int)Math.round((r*Math.sin(angle*180/Math.PI)));
+	    			j=x+(int)Math.round((r*Math.cos(angle*180/Math.PI)));
+	    	
+	    			img[i][j]=data[i*ncols+j];
+	    			}
+	    	}
+	    }
+	    
+	    if(cercleTrace==0){
+	     for (i=0; i<nrows; i++) {
 		      for (j=0; j<ncols; j++) {
 		    	  img[i][j]=data[i*ncols+j];
 		      }
+		   }
 	    }
-	    
+		
 	    Gx = new double[nrows][ncols];
 	    Gy = new double[nrows][ncols];
 	    G  = new double[nrows][ncols];
 	    
-		for (i=0; i<nrows; i++) {
-		      for (j=0; j<ncols; j++) {
+	    
+	for (i=0; i<nrows; i++) {
+		      for (j=0; j<ncols; j++) {		    	
 		        if (i==0 || i==nrows-1 || j==0 || j==ncols-1){
 		          Gx[i][j] = Gy[i][j] = G[i][j] = 0; // Limites de l'image
 		        }
@@ -129,16 +179,17 @@ public class SobelEdgeDetector {
 		          //Choix de l'intensité des points à retenir
 		          if(gradientMag[i*ncols+j]>gradlvl)
 		        	{
-		        	  magnitude[i*ncols+j]=(int) gradientMag[i*ncols+j];
+		       		  magnitude[i*ncols+j]=(int) gradientMag[i*ncols+j];
 		        	  listeDePoints.add(new Point(j,height-i,0));
 		        	  nbpoints++;
-		        		  }
+		       	   }
 		          else
-		        	  magnitude[i*ncols+j]=0;
+		        	  magnitude[i*ncols+j]=0;		       
+		          }  
 		        }
 		      }
-		    }
-		System.out.println("Nombre de points issu de la d�tection de contours");
+	
+		System.out.println("Nombre de points issu de la d�tection de contours");
 		System.out.println(nbpoints);
 		System.out.println();
 		System.out.println("Niveau de gradient");
