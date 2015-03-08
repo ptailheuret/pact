@@ -59,8 +59,8 @@ public class Test {
 		//Choix du format de sortie
 		String format = new String(".png");
 		
-		String formatInitial = new String(".JPG");
-		String imageACharger = new String("IMG_0861");
+		String formatInitial = new String(".jpg");
+		String imageACharger = new String("perspective-quadrilateral-src-img");
 		String imageContours = new String("imageContours_1");
 		String imageDetectionObjTable = new String("imageContours_2");
 		String imageTraceCercle = new String("imageTraceCercle");
