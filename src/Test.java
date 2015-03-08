@@ -30,7 +30,7 @@ public class Test {
 		cercle.setDistanceInliners(25);
 				
 		//Nombre d'inliners suffisant pour arrêter
-		cercle.setNombreInliners(3000);
+		cercle.setNombreInliners(15000);
 		cercle.setNombreDIterations(10000);
 		
 		//Niveau de gradient
@@ -46,19 +46,24 @@ public class Test {
 		String OS = System.getProperty("os.name").toLowerCase();
 				
 		if(OS.indexOf("win") >= 0){
-		dossierImages = "user.home" + "//workspace//data//";
+		dossierImages = System.getProperty("user.home") + "//workspace//data//";
 		System.out.println("C'est windows");
+		System.out.println(dossierImages);
 		}
 		
 		else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 ){
-		dossierImages = "user.home" + "/workspace/data/";
+		dossierImages = System.getProperty("user.home") + "/workspace/data/";
 		System.out.println("C'est linux");
 		}
-			
-		String imageACharger = new String("Lenna.png");
-		String imageContours = new String("imageContours_1.png");
-		String imageDetectionObjTable = new String("imageContours_2.png");
-		String imageTraceCercle = new String("imageTraceCercle.png");
+		
+		//Choix du format de sortie
+		String format = new String(".png");
+		
+		String formatInitial = new String(".JPG");
+		String imageACharger = new String("IMG_0861");
+		String imageContours = new String("imageContours_1");
+		String imageDetectionObjTable = new String("imageContours_2");
+		String imageTraceCercle = new String("imageTraceCercle");
 		
 		
 		
@@ -66,7 +71,7 @@ public class Test {
 	//Charge l'image
 		BufferedImage frame = null;
 		try {
-			frame = ImageIO.read(new File(dossierImages + imageACharger));
+			frame = ImageIO.read(new File(dossierImages + imageACharger + formatInitial));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -78,7 +83,7 @@ public class Test {
 		BufferedImage edges = detector.getEdgesImage();
 			
 	//Enregistre l'image des contours
-		File outputfile1 = new File(dossierImages + imageACharger + "_" + imageContours);
+		File outputfile1 = new File(dossierImages + imageACharger + "_" + imageContours + format);
 		try {
 			ImageIO.write(edges, "png", outputfile1);
 		} catch (IOException e) {
@@ -98,7 +103,7 @@ public class Test {
 		BufferedImage edges2 = detector.getEdgesImage();
 		
 	//Enregistre l'image des contours à l'intérieur du cercle
-		File outputfile2 = new File(dossierImages + imageACharger + "_" + imageDetectionObjTable);
+		File outputfile2 = new File(dossierImages + imageACharger + "_" + imageDetectionObjTable + format);
 		try {
 			ImageIO.write(edges2, "png", outputfile2);
 		} catch (IOException e) {
@@ -130,7 +135,7 @@ public class Test {
 		g2d.dispose();
 			
 	//Enregistre l'image avec trac� du cercle
-		File outputfile3 = new File(dossierImages + imageACharger + "_" + imageTraceCercle);
+		File outputfile3 = new File(dossierImages + imageACharger + "_" + imageTraceCercle + format);
 		try {
 			ImageIO.write(frame, "png", outputfile3);
 		} catch (IOException e) {
