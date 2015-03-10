@@ -75,7 +75,8 @@ public class Test {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}		
+	
 	
 	//S'applique a l'image
 		detector.setSourceImage(frame);
