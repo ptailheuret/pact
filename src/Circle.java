@@ -148,7 +148,7 @@ public class Circle {
 	Circle cercle = null;
 	Circle meilleurCercle;
 	
-	while(j<nombreDIterations && arret==0 ){
+	while(j<nombreDIterations && arret==0){
 		
 		//Generer 3 entiers aleatoires
 		Random r=new Random();
