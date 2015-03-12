@@ -1,30 +1,17 @@
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-
-//Test de changement, deuxième
 
 public class Test {
 
 	public static void main(String[] args) {
 			
-	//Selectionner les 3 points
-		Point A=new Point(-10,0,0);
-		Point B=new Point(10,12,1);
-		Point C=new Point(351,1,1);
-			
-	//Tracer un cercle a partir de 3 points
-		Circle cercle=new Circle(A,B,C);
 		
-	//Creer le detecteur
+	//Creer les objets
+		Circle cercle = new Circle();
 		SobelEdgeDetector detector = new SobelEdgeDetector();
-			
-		
+		FilesManager manager = new FilesManager();
+				
 	//Choix des parametres
 		//Distance au cercle pour être inliner
 		cercle.setDistanceInliners(25);
@@ -41,42 +28,24 @@ public class Test {
 		
 		//Selection du dossier des images selon le systeme d'exploitation
 		
-		String dossierImages = new String();
-		
-		String OS = System.getProperty("os.name").toLowerCase();
-				
-		if(OS.indexOf("win") >= 0){
-		dossierImages = System.getProperty("user.home") + "//workspace//data//";
-		System.out.println("C'est windows");
-		System.out.println(dossierImages);
-		}
-		
-		else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 ){
-		dossierImages = System.getProperty("user.home") + "/workspace/data/";
-		System.out.println("C'est linux");
-		}
+		manager.SystemChoice();
+		String dossierImages = manager.getDossierImages();
 		
 		//Choix du format de sortie
 		String format = new String(".png");
 		
-		String formatInitial = new String(".jpg");
-		String imageACharger = new String("perspective-quadrilateral-src-img");
+		String formatInitial = new String(".JPG");
+		String imageACharger = new String("IMG_0862");
 		String imageContours = new String("imageContours_1");
 		String imageDetectionObjTable = new String("imageContours_2");
 		String imageTraceCercle = new String("imageTraceCercle");
 		
 		
+		ImageProcessor image = new ImageProcessor();
 		
-				
 	//Charge l'image
-		BufferedImage frame = null;
-		try {
-			frame = ImageIO.read(new File(dossierImages + imageACharger + formatInitial));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-	
+		image.loadImage(dossierImages + imageACharger + formatInitial);
+		BufferedImage frame = image.getInputfile();
 	
 	//S'applique a l'image
 		detector.setSourceImage(frame);
@@ -84,13 +53,7 @@ public class Test {
 		BufferedImage edges = detector.getEdgesImage();
 			
 	//Enregistre l'image des contours
-		File outputfile1 = new File(dossierImages + imageACharger + "_" + imageContours + format);
-		try {
-			ImageIO.write(edges, "png", outputfile1);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}			 		
+		image.saveImage(edges, dossierImages + imageACharger + "_" + imageContours + format);		 		
 		
 	//Application de RANSAC
 		ArrayList<Point> listeDePoints = new ArrayList<Point>();
@@ -104,13 +67,7 @@ public class Test {
 		BufferedImage edges2 = detector.getEdgesImage();
 		
 	//Enregistre l'image des contours à l'intérieur du cercle
-		File outputfile2 = new File(dossierImages + imageACharger + "_" + imageDetectionObjTable + format);
-		try {
-			ImageIO.write(edges2, "png", outputfile2);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		image.saveImage(edges2, dossierImages + imageACharger + "_" + imageDetectionObjTable + format);
 		
 	//Examen du nombre de points
 		int nbPoints = detector.getNbPoints();
@@ -128,21 +85,10 @@ public class Test {
 		int r = (int) bestCircle.radius();
 			
 	//Dessine le cercle obtenu
-			
-		Graphics2D g2d = frame.createGraphics();
-		g2d.setColor(Color.red);
-		g2d.fillOval(x-r,y-r,2*r,2*r);
-		g2d.drawImage(frame, 0, 0, null);			
-		g2d.dispose();
+		image.drawCircle(frame, x, y, r);
 			
 	//Enregistre l'image avec trac� du cercle
-		File outputfile3 = new File(dossierImages + imageACharger + "_" + imageTraceCercle + format);
-		try {
-			ImageIO.write(frame, "png", outputfile3);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		image.saveImage(frame, dossierImages + imageACharger + "_" + imageTraceCercle + format);
 	}
 		
 }
