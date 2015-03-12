@@ -137,7 +137,7 @@ public class SobelEdgeDetector {
 	    if(cercleTrace==1){
 	    	//85% du rayon pour eviter les effets de bord et rester bien dans la table
 	    	for (r=0; r<0.85*radius; r=r+1){
-	    		for (angle=0; angle<360; angle=angle+0.1){
+	    		for (angle=0; angle<360; angle=angle+0.01){
 				
 	    			i=y-(int)Math.round((r*Math.sin(angle*180/Math.PI)));
 	    			j=x+(int)Math.round((r*Math.cos(angle*180/Math.PI)));
