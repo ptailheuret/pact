@@ -9,26 +9,41 @@ import javax.imageio.ImageIO;
 
 public class ImageProcessor {
 
-	private int height;
-	private int width;
-	private int picsize;
+	private BufferedImage inputfile;
+	private BufferedImage outputfile;
 	
 	
-	public ImageProcessor(int height, int width, int picsize){
-		this.height=height;
-		this.width=width;
-		this.picsize=picsize;
+	public BufferedImage getInputfile() {
+		return inputfile;
+	}
+
+	public void setInputfile(BufferedImage inputfile) {
+		this.inputfile = inputfile;
+	}
+
+	public BufferedImage getOutputfile() {
+		return outputfile;
+	}
+
+	public void setOutputfile(BufferedImage outputfile) {
+		this.outputfile = outputfile;
+	}
+	
+	public ImageProcessor(){
+		setInputfile(null);
+		setOutputfile(null);
 	}
 	
 	//Charge l'image
-	public void loadImage(BufferedImage inputfile, String cheminDAcces){
-			inputfile = null;
+	public void loadImage(String cheminDAcces){
+			BufferedImage inputfile = null;
 			try {
 				inputfile = ImageIO.read(new File(cheminDAcces));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			setInputfile(inputfile);
 	}
 	
 	//Enregistre l'image
@@ -40,6 +55,7 @@ public class ImageProcessor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			setOutputfile(outputfile);
 	}
 	
 	//Tracer un cercle sur une image frame
