@@ -47,6 +47,12 @@ public class Circle {
 		this.C=C;
 	}
 	
+	public Circle(){
+	}
+	
+	public void bestCircle(){
+		
+	}
 	//Trouver le centre du cercle
 	public Point circleCenter(){
 	
@@ -116,6 +122,15 @@ public class Circle {
 	}
 	
 	//Calculer la distance d'un point a un cercle
+	
+/** PISTE DE REFLEXION
+ * Ici pour le calcul de la distance au cercle on calcul à chaque fois le rayon du cercle en question
+ * Il faut donc également récupérer le centre
+ * Dans l'algorithme on fait cette opération pour tous les points
+ * Il serait judicieux d'entrer le cercle en paramètre
+ * @param O
+ * @return
+ */
 	public double distanceCircle(Point O){
 		radius();
 		double dx=circleCenter.getX()-O.getX();
@@ -128,6 +143,14 @@ public class Circle {
 		  y = y-(r/2);
 		  g.fillOval(x,y,r,r);
 		}
+	
+/** PISTE DE REFLEXION
+ * Cf au dessus.
+ * A tester
+ * @param O
+ * @return
+ */
+	
 	
 	public Circle ransac(ArrayList<Point> listePoints){
 		
