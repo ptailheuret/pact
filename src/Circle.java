@@ -109,6 +109,7 @@ public class Circle {
 	        center.setX((int)((aSlope*bSlope*(AB_Mid.getY()-BC_Mid.getY()) - aSlope*BC_Mid.getX() + bSlope*AB_Mid.getX())/(bSlope-aSlope)));
 	        center.setY((int)(AB_Mid.getY() - (center.getX() - AB_Mid.getX())/aSlope));
 	    }
+	    circleCenter = center;
 	    return center;
 	  }
 	

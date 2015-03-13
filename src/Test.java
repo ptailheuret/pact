@@ -21,7 +21,7 @@ public class Test {
 		cercle.setNombreDIterations(10000);
 		
 		//Niveau de gradient
-		detector.setGradientLevel(100);
+		detector.setGradientLevel(150);
 		
 		//Nombre de points permettant de dire qu'il y a un objet sur la table
 		int nbMaximal = 2000;
