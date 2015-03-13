@@ -1,5 +1,3 @@
-# pact
-
 Projet PACT Télécom ParisTech
 -----------------------------
 
@@ -11,6 +9,22 @@ Obtention de cette liste de point sur une image à partir d'une estimation de co
   * Algorithme par gradient avec le filtre de SOBEL(2)
   * Algorithme par gradient avec le filtre de CANNY(3)
   
+Voici ce que fournit le programme sur une image test
+
+[]!(test.png)
+
+Après passage du filtre de SOBEL
+
+[]!(testResult1.png)
+
+Après passage de RANSAC, détection du cercle, et découpage de l'image de contours autour de celui ci
+
+[]!(testResult2.png)
+
+Le tracé du cercle sur l'image initiale
+
+[]!(testResultCircle.png)
+
 
 Références:
 * (1): http://en.wikipedia.org/wiki/RANSAC
