@@ -17,7 +17,7 @@ public class Test {
 		cercle.setDistanceInliners(25);
 				
 		//Nombre d'inliners suffisant pour arrêter
-		cercle.setNombreInliners(15000);
+		cercle.setNombreInliners(1500000);
 		cercle.setNombreDIterations(10000);
 		
 		//Niveau de gradient
@@ -32,7 +32,7 @@ public class Test {
 		String dossierImages = manager.getDossierImages();
 		
 		//Choix du format de sortie
-		String format = new String(".png");
+		String format = new String(".jpg");
 		
 		String formatInitial = new String(".jpg");
 		String imageACharger = new String("cercle");
@@ -61,7 +61,7 @@ public class Test {
 		cercle.ransac(listeDePoints);
 		//Cercle detecte
 		detector.setCercleTrace(1);
-		
+	/*	
 	//Nouvelle application de SOBEL dans le cercle detecte plus haut afin de detecter la presence ou non d'objets
 		detector.process();
 		BufferedImage edges2 = detector.getEdgesImage();
@@ -75,7 +75,7 @@ public class Test {
 			System.out.println("Il y a des objets sur la table");
 		}
 		else
-			System.out.println("Il n'y a pas d'objets");
+			System.out.println("Il n'y a pas d'objets");*/
 		
 		
 	//Definir le meilleur cercle

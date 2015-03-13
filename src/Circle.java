@@ -9,6 +9,9 @@ public class Circle {
 
 	private double radius;
 	private Point circleCenter;
+	private int x;
+	private int y;
+	
 	private Point A;
 	private Point B;
 	private Point C;
@@ -21,11 +24,6 @@ public class Circle {
 	int p;
 	int nombreDIterations;
 
-
-	public Circle(double radius, Point circleCenter){
-		this.radius=radius;
-		this.circleCenter=circleCenter;
-	}
 	
 	public void setDistanceInliners(int distance){
 		d=distance;
@@ -50,9 +48,13 @@ public class Circle {
 	public Circle(){
 	}
 	
-	public void bestCircle(){
-		
+	public void CircleCaracteristic(Circle cercle){
+		circleCenter = cercle.circleCenter();
+		x = circleCenter.getX();
+		y = circleCenter.getY();
+		radius = cercle.radius();		
 	}
+	
 	//Trouver le centre du cercle
 	public Point circleCenter(){
 	
@@ -107,8 +109,6 @@ public class Circle {
 	        center.setX((int)((aSlope*bSlope*(AB_Mid.getY()-BC_Mid.getY()) - aSlope*BC_Mid.getX() + bSlope*AB_Mid.getX())/(bSlope-aSlope)));
 	        center.setY((int)(AB_Mid.getY() - (center.getX() - AB_Mid.getX())/aSlope));
 	    }
-	
-	    circleCenter=center;
 	    return center;
 	  }
 	
@@ -124,18 +124,18 @@ public class Circle {
 	//Calculer la distance d'un point a un cercle
 	
 /** PISTE DE REFLEXION
- * Ici pour le calcul de la distance au cercle on calcul à chaque fois le rayon du cercle en question
- * Il faut donc également récupérer le centre
- * Dans l'algorithme on fait cette opération pour tous les points
- * Il serait judicieux d'entrer le cercle en paramètre
+ * Ici pour le calcul de la distance au cercle on calcul ï¿½ chaque fois le rayon du cercle en question
+ * Il faut donc ï¿½galement rï¿½cupï¿½rer le centre
+ * Dans l'algorithme on fait cette opï¿½ration pour tous les points
+ * Il serait judicieux d'entrer le cercle en paramï¿½tre
  * @param O
  * @return
  */
 	public double distanceCircle(Point O){
-		radius();
-		double dx=circleCenter.getX()-O.getX();
-		double dy=circleCenter.getY()-O.getY();
-		return Math.abs(Math.sqrt(dx*dx+dy*dy)-radius());
+		
+		double dx=x-O.getX();
+		double dy=y-O.getY();
+		return Math.abs(Math.sqrt(dx*dx+dy*dy)-radius);
 	}
 	
 	public void drawCenteredCircle(Graphics2D g, int x, int y, int r) {
@@ -160,7 +160,7 @@ public class Circle {
 	int indexPlusGrandNombreInliners;
 	double distance;
 	
-	System.out.println("Paramètres: Distance inliners, Nombre d'inliners suffisants, nombre d'itérations");
+	System.out.println("Paramï¿½tres: Distance inliners, Nombre d'inliners suffisants, nombre d'itï¿½rations");
 	System.out.println(d);
 	System.out.println(p);
 	System.out.println(nombreDIterations);
@@ -184,13 +184,14 @@ public class Circle {
 		Point B=listePoints.get(b);
 		Point C=listePoints.get(c);
 	
-		//Tracer un cercle a  partir de 3 points
+		//Tracer un cercle aï¿½ partir de 3 points
 		cercle=new Circle(A,B,C);
+		CircleCaracteristic(cercle);
 	
 		//Classer les points en Inliners et Outliners
 		for(i=0;i<n;i++)
 		{
-			distance=cercle.distanceCircle(listePoints.get(i));
+			distance=distanceCircle(listePoints.get(i));
 			
 			if(distance<d)
 				listePoints.get(i).setInliner(1);
@@ -211,7 +212,7 @@ public class Circle {
 	
 		if(arret==1){
 			meilleurCercle=cercle;
-			System.out.println("Arret avant la fin, nombre d'itérations");
+			System.out.println("Arret avant la fin, nombre d'itï¿½rations");
 			System.out.println(j);
 			System.out.println();
 		}
