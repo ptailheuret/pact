@@ -50,7 +50,6 @@ public class FilesManager {
 		else if(isUnix()){
 		dossierImages = System.getProperty("user.home") + "/workspace/data/";
 		System.out.println("C'est linux");
-		System.out.println();
 		}
 		
 		setDossierImages(dossierImages);
