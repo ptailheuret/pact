@@ -11,19 +11,19 @@ Obtention de cette liste de point sur une image à partir d'une estimation de co
   
 Voici ce que fournit le programme sur une image test
 
-[]!(test.png)
+![](test.png)
 
 Après passage du filtre de SOBEL
 
-[]!(testResult1.png)
+![](testResult1.png)
 
 Après passage de RANSAC, détection du cercle, et découpage de l'image de contours autour de celui ci
 
-[]!(testResult2.png)
+![]!(testResult2.png)
 
 Le tracé du cercle sur l'image initiale
 
-[]!(testResultCircle.png)
+![](testResultCircle.png)
 
 
 Références:
