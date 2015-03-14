@@ -2,6 +2,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 
+
 public class Test {
 
 	public static void main(String[] args) {
@@ -21,7 +22,7 @@ public class Test {
 		cercle.setNombreDIterations(10000);
 		
 		//Niveau de gradient
-		detector.setGradientLevel(150);
+		detector.setGradientLevel(400);
 		
 		//Nombre de points permettant de dire qu'il y a un objet sur la table
 		int nbMaximal = 2000;
@@ -34,8 +35,8 @@ public class Test {
 		//Choix du format de sortie
 		String format = new String(".jpg");
 		
-		String formatInitial = new String(".jpg");
-		String imageACharger = new String("cercle");
+		String formatInitial = new String(".JPG");
+		String imageACharger = new String("IMG_0860");
 		String imageContours = new String("imageContours_1");
 		String imageDetectionObjTable = new String("imageContours_2");
 		String imageTraceCercle = new String("imageTraceCercle");

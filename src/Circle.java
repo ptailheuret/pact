@@ -118,25 +118,16 @@ public class Circle {
 		circleCenter();
 		double dx=circleCenter.getX()-A.getX();
 		double dy=circleCenter.getY()-A.getY();
-		radius=Math.sqrt(dx*dx+dy*dy);
+		radius=Math.hypot(dx,dy);
 		return radius;
 	}
 	
 	//Calculer la distance d'un point a un cercle
-	
-/** PISTE DE REFLEXION
- * Ici pour le calcul de la distance au cercle on calcul ï¿½ chaque fois le rayon du cercle en question
- * Il faut donc ï¿½galement rï¿½cupï¿½rer le centre
- * Dans l'algorithme on fait cette opï¿½ration pour tous les points
- * Il serait judicieux d'entrer le cercle en paramï¿½tre
- * @param O
- * @return
- */
 	public double distanceCircle(Point O){
 		
 		double dx=x-O.getX();
 		double dy=y-O.getY();
-		return Math.abs(Math.sqrt(dx*dx+dy*dy)-radius);
+		return Math.abs(Math.hypot(dx,dy)-radius);
 	}
 	
 	public void drawCenteredCircle(Graphics2D g, int x, int y, int r) {
@@ -146,8 +137,7 @@ public class Circle {
 		}
 	
 /** PISTE DE REFLEXION
- * Cf au dessus.
- * A tester
+ * Implémentation des reflexions effectuées
  * @param O
  * @return
  */
@@ -201,6 +191,7 @@ public class Circle {
 		}
 		
 		//Ajouter le cercle trouve a la liste de cercles
+		//En parallèle une liste contenant le nombre d'inliners de chaque modèle se remplit
 		if(A.nombreInliners(listePoints)<p){
 			listeCercles.add(cercle);
 			listeNombreInliners.add(A.nombreInliners(listePoints));
