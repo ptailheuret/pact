@@ -1,52 +1,52 @@
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 
-//Test de changement
 
 public class Test {
 
 	public static void main(String[] args) {
 			
-	//Selectionner les 3 points
-		Point A=new Point(-10,0,0);
-		Point B=new Point(10,12,1);
-		Point C=new Point(351,1,1);
-			
-	//Tracer un cercle a partir de 3 points
-		Circle cercle=new Circle(A,B,C);
 		
-	//Creer le detecteur
+	//Creer les objets
+		Circle cercle = new Circle();
 		SobelEdgeDetector detector = new SobelEdgeDetector();
-			
-		
+		FilesManager manager = new FilesManager();
+				
 	//Choix des parametres
 		//Distance au cercle pour être inliner
 		cercle.setDistanceInliners(25);
 				
 		//Nombre d'inliners suffisant pour arrêter
-		cercle.setNombreInliners(3000);
+		cercle.setNombreInliners(1500000);
 		cercle.setNombreDIterations(10000);
 		
 		//Niveau de gradient
-		detector.setGradientLevel(100);
+		detector.setGradientLevel(400);
 		
 		//Nombre de points permettant de dire qu'il y a un objet sur la table
 		int nbMaximal = 2000;
 		
+		//Selection du dossier des images selon le systeme d'exploitation
+		
+		manager.SystemChoice();
+		String dossierImages = manager.getDossierImages();
+		
+		//Choix du format de sortie
+		String format = new String(".jpg");
+		
+		String formatInitial = new String(".JPG");
+		String imageACharger = new String("IMG_0860");
+		String imageContours = new String("imageContours_1");
+		String imageDetectionObjTable = new String("imageContours_2");
+		String imageTraceCercle = new String("imageTraceCercle");
+		
+		
+		ImageProcessor image = new ImageProcessor();
+		
 	//Charge l'image
-		BufferedImage frame = null;
-		try {
-			frame = ImageIO.read(new File("C://Users//Patrick//workspace//data//test.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		image.loadImage(dossierImages + imageACharger + formatInitial);
+		BufferedImage frame = image.getInputfile();
 	
 	//S'applique a l'image
 		detector.setSourceImage(frame);
@@ -54,13 +54,7 @@ public class Test {
 		BufferedImage edges = detector.getEdgesImage();
 			
 	//Enregistre l'image des contours
-		File outputfile1 = new File("C://Users//Patrick//workspace//data//testResult1.png");
-		try {
-			ImageIO.write(edges, "png", outputfile1);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}			 		
+		image.saveImage(edges, dossierImages + imageACharger + "_" + imageContours + format);		 		
 		
 	//Application de RANSAC
 		ArrayList<Point> listeDePoints = new ArrayList<Point>();
@@ -68,19 +62,13 @@ public class Test {
 		cercle.ransac(listeDePoints);
 		//Cercle detecte
 		detector.setCercleTrace(1);
-		
+	/*	
 	//Nouvelle application de SOBEL dans le cercle detecte plus haut afin de detecter la presence ou non d'objets
 		detector.process();
 		BufferedImage edges2 = detector.getEdgesImage();
 		
-	//Enregistre l'image des contours
-		File outputfile2 = new File("C://Users//Patrick//workspace//data//testResult2.png");
-		try {
-			ImageIO.write(edges2, "png", outputfile2);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	//Enregistre l'image des contours à l'intérieur du cercle
+		image.saveImage(edges2, dossierImages + imageACharger + "_" + imageDetectionObjTable + format);
 		
 	//Examen du nombre de points
 		int nbPoints = detector.getNbPoints();
@@ -88,7 +76,7 @@ public class Test {
 			System.out.println("Il y a des objets sur la table");
 		}
 		else
-			System.out.println("Il n'y a pas d'objets");
+			System.out.println("Il n'y a pas d'objets");*/
 		
 		
 	//Definir le meilleur cercle
@@ -98,21 +86,10 @@ public class Test {
 		int r = (int) bestCircle.radius();
 			
 	//Dessine le cercle obtenu
-			
-		Graphics2D g2d = frame.createGraphics();
-		g2d.setColor(Color.red);
-		g2d.fillOval(x-r,y-r,2*r,2*r);
-		g2d.drawImage(frame, 0, 0, null);			
-		g2d.dispose();
+		image.drawCircle(frame, x, y, r);
 			
 	//Enregistre l'image avec trac� du cercle
-		File outputfile3 = new File("C://Users//Patrick//workspace//data//testResultCircle.png");
-		try {
-			ImageIO.write(frame, "png", outputfile3);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		image.saveImage(frame, dossierImages + imageACharger + "_" + imageTraceCercle + format);
 	}
 		
 }

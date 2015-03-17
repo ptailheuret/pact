@@ -3,6 +3,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 
+
 public class SobelEdgeDetector {
 
 	
@@ -19,8 +20,6 @@ public class SobelEdgeDetector {
 	private BufferedImage edgesImage;	
 	private boolean contrastNormalized;
 	
-	private int[] xGradient;
-	private int[] yGradient;
 	private float[] gradientMag;
 	
 	
@@ -96,8 +95,6 @@ public class SobelEdgeDetector {
 			data = new int[picsize];
 			magnitude = new int[picsize];
 			
-			xGradient = new int[picsize];
-			yGradient = new int[picsize];
 			gradientMag = new float[picsize];
 		}
 	}
@@ -110,19 +107,14 @@ public class SobelEdgeDetector {
 	    double r=0;
 	    double angle;
 	    
-	    
-	    //Selectionner 3 points
-		Point A=new Point(-10,0,0);
-		Point B=new Point(10,12,1);
-		Point C=new Point(351,1,1);
-				
+	    		
 		//Tracer un cercle a partir de 3 points
 		int x=0,y=0;
 		double radius=0;
 		nbpoints=0;
 			
 		if(cercleTrace==1){
-			Circle cercle=new Circle(A,B,C);
+			Circle cercle=new Circle();
 			Circle bestCircle = cercle.getBestCircle();
 			x = bestCircle.circleCenter().getX();
 			y = bestCircle.circleCenter().getY();
@@ -137,7 +129,7 @@ public class SobelEdgeDetector {
 	    if(cercleTrace==1){
 	    	//85% du rayon pour eviter les effets de bord et rester bien dans la table
 	    	for (r=0; r<0.85*radius; r=r+1){
-	    		for (angle=0; angle<360; angle=angle+0.1){
+	    		for (angle=0; angle<360; angle=angle+0.01){
 				
 	    			i=y-(int)Math.round((r*Math.sin(angle*180/Math.PI)));
 	    			j=x+(int)Math.round((r*Math.cos(angle*180/Math.PI)));
@@ -172,8 +164,6 @@ public class SobelEdgeDetector {
 		                     img[i-1][j-1] - 2*img[i][j-1] - img[i+1][j-1];
 		          G[i][j]  = Math.hypot(Math.abs(Gx[i][j]),Math.abs(Gy[i][j]));
 		          
-		          xGradient[i*ncols+j] = (int) Gx[i][j];
-		          yGradient[i*ncols+j] = (int) Gy[i][j];
 		          gradientMag[i*ncols+j] = (int) G[i][j];
 		          
 		          //Choix de l'intensité des points à retenir
