@@ -18,7 +18,7 @@ public class Test {
 		cercle.setDistanceInliners(25);
 				
 		//Nombre d'inliners suffisant pour arrêter
-		cercle.setNombreInliners(1500000);
+		cercle.setNombreInliners((int)(4*Math.PI*200));
 		cercle.setNombreDIterations(10000);
 		
 		//Niveau de gradient
@@ -61,8 +61,8 @@ public class Test {
 		listeDePoints=SobelEdgeDetector.getListPoints();
 		cercle.ransac(listeDePoints);
 		//Cercle detecte
-		detector.setCercleTrace(1);
-	/*	
+		/*	detector.setCercleTrace(1);
+	
 	//Nouvelle application de SOBEL dans le cercle detecte plus haut afin de detecter la presence ou non d'objets
 		detector.process();
 		BufferedImage edges2 = detector.getEdgesImage();

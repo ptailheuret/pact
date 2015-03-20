@@ -193,8 +193,10 @@ public class Circle {
 		//Ajouter le cercle trouve a la liste de cercles
 		//En parallèle une liste contenant le nombre d'inliners de chaque modèle se remplit
 		if(A.nombreInliners(listePoints)<p){
-			listeCercles.add(cercle);
-			listeNombreInliners.add(A.nombreInliners(listePoints));
+			if(1==1){
+				listeCercles.add(cercle);
+				listeNombreInliners.add(A.nombreInliners(listePoints));
+			}
 		}
 		else
 			arret=1;
