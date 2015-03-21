@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
  
 
+
+
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
- 
+import javax.swing.JPanel;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -33,25 +36,51 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+        /*JPanel main = new JPanel();
+        main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
+        JPanel vidpanel = new JPanel();
+        JPanel vidpanel1 = new JPanel();*/
 		
 		JFrame jframe = new JFrame("DETECTION DE CONTOURS POUR LES TRISOMIQUES");
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JLabel vidpanel = new JLabel();
-        jframe.setContentPane(vidpanel);
+        JLabel label0 = new JLabel();    
         jframe.setSize(640, 480);
+        jframe.setContentPane(label0);   
         jframe.setVisible(true);
         
         Mat frame = new Mat();
-        Size sz = new Size(320, 240);
+        Size sz = new Size(640, 480);
+        
+
+        JFrame jframe1 = new JFrame("DETECTION DE CONTOURS POUR LES TRISOMIQUES 2");
+        jframe1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JLabel label1 = new JLabel();
+        jframe1.setContentPane(label1);
+        jframe1.setSize(640, 480);
+        jframe1.setVisible(true);
+        
+       /* JFrame jframe2 = new JFrame("DETECTION DE CONTOURS POUR LES TRISOMIQUES 3");
+        jframe2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JLabel label2 = new JLabel();
+        jframe2.setContentPane(label2);
+        jframe2.setSize(640, 480);
+        jframe2.setVisible(true);
+        
+       /* JFrame jframe3 = new JFrame("DETECTION DE CONTOURS POUR LES TRISOMIQUES 4");
+        jframe1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JLabel label3 = new JLabel();
+        jframe1.setContentPane(label3);
+        jframe1.setSize(640, 480);
+        jframe1.setVisible(true);*/
+        
         VideoCapture camera = new VideoCapture(0);
         int i = 0;
-        ImageProcessor image1 = new ImageProcessor();
  
       //Creer les objets
-		Circle cercle = new Circle();
-		SobelEdgeDetector detector = new SobelEdgeDetector();
-		FilesManager manager = new FilesManager();
+		SobelEdgeDetectorLive detector = new SobelEdgeDetectorLive();
 		BufferedImage edges = null;
+		BufferedImage gradx = null;
+		BufferedImage grady = null;
 				
 		//Niveau de gradient
 		detector.setGradientLevel(100); 
@@ -62,23 +91,30 @@ public class Main {
             	
             	Imgproc.resize(frame, frame, sz);
                 imag = frame.clone();
+                Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
+                Imgproc.GaussianBlur(frame, frame, new Size(3, 3), 0);
                 
                 if (i == 0) {
                     jframe.setSize(frame.width(), frame.height());
                     detector.setSourceImage(Mat2bufferedImage(frame));
-    				detector.process();	
+    				//detector.process(false);
+    				detector.process(true);
                 }
                 
                 if(i==1){
     		
     				detector.setSourceImage(Mat2bufferedImage(frame));
-    				detector.process();	
+    				detector.process(true);
     				edges = detector.getEdgesImage();
-    				ImageIcon image = new ImageIcon(edges);
-    	            vidpanel.setIcon(image);
-    	            vidpanel.repaint();
+    				
+    				ImageIcon image0 = new ImageIcon(edges);
+    	            label0.setIcon(image0);
+    	            label0.repaint();
+    				
+    				ImageIcon image1 = new ImageIcon(Mat2bufferedImage(imag));
+    	            label1.setIcon(image1);
+    	            label1.repaint();    	            
                 }
- 
             }
             i = 1;
                         

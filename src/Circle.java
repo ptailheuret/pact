@@ -8,6 +8,8 @@ import java.util.Random;
 public class Circle {
 
 	private double radius;
+	private double radius1;
+	
 	private Point circleCenter;
 	private int x;
 	private int y;
@@ -52,7 +54,8 @@ public class Circle {
 		circleCenter = cercle.circleCenter();
 		x = circleCenter.getX();
 		y = circleCenter.getY();
-		radius = cercle.radius();		
+		radius = cercle.radius();
+		radius1 = cercle.radiusToCompare();
 	}
 	
 	//Trouver le centre du cercle
@@ -122,12 +125,27 @@ public class Circle {
 		return radius;
 	}
 	
+	public double radiusToCompare(){
+		circleCenter();
+		double dx=circleCenter.getX()-A.getX();
+		double dy=circleCenter.getY()-A.getY();
+		radius1=dx*dx+dy*dy;
+		return radius1;
+	}
+	
 	//Calculer la distance d'un point a un cercle
 	public double distanceCircle(Point O){
 		
 		double dx=x-O.getX();
 		double dy=y-O.getY();
 		return Math.abs(Math.hypot(dx,dy)-radius);
+	}
+	
+	public double distanceToCompareCircle(Point O){
+		
+		double dx=x-O.getX();
+		double dy=y-O.getY();
+		return Math.abs(dx*dx+dy*dy-radius1);
 	}
 	
 	public void drawCenteredCircle(Graphics2D g, int x, int y, int r) {
@@ -184,7 +202,7 @@ public class Circle {
 		{
 			distance=distanceCircle(listePoints.get(i));
 			
-			if(distance<d)
+			if(distance<(d))
 				listePoints.get(i).setInliner(1);
 			else
 				listePoints.get(i).setInliner(0);

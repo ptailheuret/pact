@@ -18,11 +18,11 @@ public class Test {
 		cercle.setDistanceInliners(25);
 				
 		//Nombre d'inliners suffisant pour arrêter
-		cercle.setNombreInliners((int)(4*Math.PI*200));
+		cercle.setNombreInliners((int)(6*Math.PI*200));
 		cercle.setNombreDIterations(10000);
 		
 		//Niveau de gradient
-		detector.setGradientLevel(400);
+		detector.setGradientLevel(200);
 		
 		//Nombre de points permettant de dire qu'il y a un objet sur la table
 		int nbMaximal = 2000;
@@ -36,7 +36,7 @@ public class Test {
 		String format = new String(".jpg");
 		
 		String formatInitial = new String(".JPG");
-		String imageACharger = new String("IMG_0860");
+		String imageACharger = new String("perspective-quadrilateral-src-img");
 		String imageContours = new String("imageContours_1");
 		String imageDetectionObjTable = new String("imageContours_2");
 		String imageTraceCercle = new String("imageTraceCercle");
@@ -59,7 +59,11 @@ public class Test {
 	//Application de RANSAC
 		ArrayList<Point> listeDePoints = new ArrayList<Point>();
 		listeDePoints=SobelEdgeDetector.getListPoints();
+		long start = System.currentTimeMillis();
 		cercle.ransac(listeDePoints);
+		long duree = System.currentTimeMillis() - start;
+		System.out.println("Execution time of RANSAC:" + duree/1000 + "s");
+		
 		//Cercle detecte
 		/*	detector.setCercleTrace(1);
 	
