@@ -97,14 +97,13 @@ public class Main {
                 if (i == 0) {
                     jframe.setSize(frame.width(), frame.height());
                     detector.setSourceImage(Mat2bufferedImage(frame));
-    				//detector.process(false);
-    				detector.process(true);
+    				detector.process("Optimisation");
                 }
                 
                 if(i==1){
     		
     				detector.setSourceImage(Mat2bufferedImage(frame));
-    				detector.process(true);
+    				detector.process("Optimisation");
     				edges = detector.getEdgesImage();
     				
     				ImageIcon image0 = new ImageIcon(edges);
