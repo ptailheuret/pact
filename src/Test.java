@@ -15,14 +15,14 @@ public class Test {
 				
 	//Choix des parametres
 		//Distance au cercle pour être inliner
-		cercle.setDistanceInliners(25);
+		cercle.setDistanceInliners(50);
 				
 		//Nombre d'inliners suffisant pour arrêter
-		cercle.setNombreInliners((int)(6*Math.PI*200));
+		cercle.setNombreInliners((int)(100000));
 		cercle.setNombreDIterations(10000);
 		
 		//Niveau de gradient
-		detector.setGradientLevel(200);
+		detector.setGradientLevel(300);
 		
 		//Nombre de points permettant de dire qu'il y a un objet sur la table
 		int nbMaximal = 2000;
@@ -33,10 +33,10 @@ public class Test {
 		String dossierImages = manager.getDossierImages();
 		
 		//Choix du format de sortie
-		String format = new String(".jpg");
+		String format = new String(".png");
 		
-		String formatInitial = new String(".JPG");
-		String imageACharger = new String("perspective-quadrilateral-src-img");
+		String formatInitial = new String(".jpg");
+		String imageACharger = new String("table_tournesol_vue_de_dessus");
 		String imageContours = new String("imageContours_1");
 		String imageDetectionObjTable = new String("imageContours_2");
 		String imageTraceCercle = new String("imageTraceCercle");
