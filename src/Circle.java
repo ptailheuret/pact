@@ -155,13 +155,13 @@ public class Circle {
 		}
 	
 /** PISTE DE REFLEXION
- * Implémentation des reflexions effectuées
+ * Implï¿½mentation des reflexions effectuï¿½es
  * @param O
  * @return
  */
 	
 	
-	public Circle ransac(ArrayList<Point> listePoints){
+	public Circle ransac(ArrayList<Point> listePoints, String value){
 		
 	int i,j=0;
 	int n=listePoints.size();
@@ -180,6 +180,7 @@ public class Circle {
 	Circle cercle = null;
 	Circle meilleurCercle;
 	
+	
 	while(j<nombreDIterations && arret==0){
 		
 		//Generer 3 entiers aleatoires
@@ -196,30 +197,35 @@ public class Circle {
 		//Tracer un cercle aï¿½ partir de 3 points
 		cercle=new Circle(A,B,C);
 		CircleCaracteristic(cercle);
-	
+		
 		//Classer les points en Inliners et Outliners
 		for(i=0;i<n;i++)
 		{
+			
+			if(value == "Optimisé")
+				trier(listePoints.get(i),d);
+			
+			else if(value == "Naif"){
 			distance=distanceCircle(listePoints.get(i));
 			
 			if(distance<(d))
 				listePoints.get(i).setInliner(1);
 			else
 				listePoints.get(i).setInliner(0);
+			}			
 		}
 		
 		//Ajouter le cercle trouve a la liste de cercles
-		//En parallèle une liste contenant le nombre d'inliners de chaque modèle se remplit
+		//En parallï¿½le une liste contenant le nombre d'inliners de chaque modï¿½le se remplit
 		if(A.nombreInliners(listePoints)<p){
-			if(1==1){
 				listeCercles.add(cercle);
 				listeNombreInliners.add(A.nombreInliners(listePoints));
-			}
 		}
 		else
 			arret=1;
 		j++;
 	}
+	
 	
 	
 		if(arret==1){
@@ -244,7 +250,53 @@ public class Circle {
 		System.out.println(meilleurCercle.circleCenter().getY());
 		
 		return meilleurCercle;
+	}
+	/**
+	 * Nouvelle mÃ©thode pour trier de maniÃ¨re efficace
+	 * les points
+	 * Le principe est d'utiliser le moins possible le
+	 * calcul via racines carrÃ©es
+	 * 
+	 * Sur un exemple on passe de 220s Ã  12s d'exÃ©cution
+	 * 
+	 * 
+	 * @param point
+	 * @param seuil
+	 */
+	public void trier(Point point, int seuil){
 		
+		int dx = x - point.getX();
+		int dy = y - point.getY();
+		int prod = dx*dx+dy*dy;
+		double distanceCarre = prod - radius*radius;
+		double diff = radius - seuil;
 		
+		//Le point est dans le cercle
+		if(distanceCarre<0){
+			if(diff>=0){
+				if((diff*diff)<prod)
+					point.setInliner(1);
+				else
+					point.setInliner(0);
+			}
+			
+			else{
+				if(distanceCircle(point)<seuil)
+					point.setInliner(1);
+				else
+					point.setInliner(0);
+			}
+		}
+		
+		//Le point est Ã  l'extÃ©rieur du cercle
+		else if(distanceCarre>0){
+			if(prod<(seuil+radius)*(seuil+radius))
+				point.setInliner(1);
+			else
+				point.setInliner(0);
+		}
+		
+		else if(distanceCarre==0)
+			point.setInliner(1);
 	}
 }
