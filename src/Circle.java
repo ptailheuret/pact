@@ -166,7 +166,7 @@ public class Circle {
 	int i,j=0;
 	int n=listePoints.size();
 	int arret=0;
-	int indexPlusGrandNombreInliners;
+	int indexPlusGrandNombreInliners=0;
 	double distance;
 	
 	System.out.println("Param�tres: Distance inliners, Nombre d'inliners suffisants, nombre d'it�rations");
@@ -217,11 +217,11 @@ public class Circle {
 		
 		//Ajouter le cercle trouve a la liste de cercles
 		//En parall�le une liste contenant le nombre d'inliners de chaque mod�le se remplit
-		if(A.nombreInliners(listePoints)<p){
+		if(nombreInliners(listePoints)<p){
 				listeCercles.add(cercle);
-				listeNombreInliners.add(A.nombreInliners(listePoints));
+				listeNombreInliners.add(nombreInliners(listePoints));
 		}
-		else if(j>1000)
+		else if(j>300)
 			arret=1;
 		j++;
 	}
@@ -298,5 +298,14 @@ public class Circle {
 		
 		else if(distanceCarre==0)
 			point.setInliner(1);
+	}
+	
+	//Calculer le nombre d'Inliner
+	public int nombreInliners(ArrayList<Point> listePoints) {
+		int nombreInliners=0;
+		for(int i=0;i<listePoints.size();i++){
+			nombreInliners=nombreInliners+listePoints.get(i).getInliner();
+		}	
+		return nombreInliners;
 	}
 }

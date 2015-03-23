@@ -38,14 +38,4 @@ public void setInliner(int z) {
 	this.z = z;
 }
 
-//Calculer le nombre d'Inliner
-public int nombreInliners(ArrayList<Point> listePoints) {
-	int nombreInliners=0;
-	for(int i=0;i<listePoints.size();i++){
-		nombreInliners=nombreInliners+listePoints.get(i).getInliner();
-	}	
-	return nombreInliners;
-}
-
-
 }
