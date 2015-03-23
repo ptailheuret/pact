@@ -139,6 +139,7 @@ public class SobelEdgeDetectorLive {
 						if (gradientMag[i * ncols + j] > gradlvl) {
 							magnitude[i * ncols + j] = (int) gradientMag[i
 									* ncols + j];
+							listeDePoints.add(new Point(j,height-i,0));
 							nbpoints++;
 						} else
 							magnitude[i * ncols + j] = 0;
@@ -148,6 +149,7 @@ public class SobelEdgeDetectorLive {
 						if (gradientMag[i * ncols + j] > gradlvl * gradlvl) {
 							magnitude[i * ncols + j] = (int) (Math
 									.sqrt(G[i][j]));
+							listeDePoints.add(new Point(j,height-i,0));
 							nbpoints++;
 						} else
 							magnitude[i * ncols + j] = 0;

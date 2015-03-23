@@ -7,6 +7,11 @@ import java.io.InputStream;
 
 
 
+
+
+
+
+
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -59,32 +64,32 @@ public class Main {
         jframe1.setSize(640, 480);
         jframe1.setVisible(true);
         
-       /* JFrame jframe2 = new JFrame("DETECTION DE CONTOURS POUR LES TRISOMIQUES 3");
-        jframe2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JLabel label2 = new JLabel();
-        jframe2.setContentPane(label2);
-        jframe2.setSize(640, 480);
-        jframe2.setVisible(true);
-        
-       /* JFrame jframe3 = new JFrame("DETECTION DE CONTOURS POUR LES TRISOMIQUES 4");
-        jframe1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JLabel label3 = new JLabel();
-        jframe1.setContentPane(label3);
-        jframe1.setSize(640, 480);
-        jframe1.setVisible(true);*/
-        
         VideoCapture camera = new VideoCapture(0);
         int i = 0;
+        int x = 0;
+        int y = 0;
+        int r = 0;
+        int xsaved = 0;
+        int ysaved = 0;
  
       //Creer les objets
 		SobelEdgeDetectorLive detector = new SobelEdgeDetectorLive();
 		BufferedImage edges = null;
-		BufferedImage gradx = null;
-		BufferedImage grady = null;
+		Circle cercle = new Circle();
+		ImageProcessor imageProcessor = new ImageProcessor();
+		
+		ArrayList<Point> listeDePoints = new ArrayList<Point>();
 				
+		
+		//Distance au cercle pour être inliner
+				cercle.setDistanceInliners(100);
+						
+				//Nombre d'inliners suffisant pour arrêter
+				cercle.setNombreInliners(1000);
+				cercle.setNombreDIterations(1500);
 		//Niveau de gradient
-		detector.setGradientLevel(100); 
-        
+		detector.setGradientLevel(200); 
+        int compteur = 0;
 
         while (true) {
             if (camera.read(frame)) {
@@ -96,28 +101,57 @@ public class Main {
                 
                 if (i == 0) {
                     jframe.setSize(frame.width(), frame.height());
-                    detector.setSourceImage(Mat2bufferedImage(frame));
-    				detector.process("Optimisation");
+                    //detector.setSourceImage(Mat2bufferedImage(frame));
+    				//detector.process("Optimisation");
+    				
+    				//listeDePoints=SobelEdgeDetectorLive.getListPoints();
                 }
                 
                 if(i==1){
     		
     				detector.setSourceImage(Mat2bufferedImage(frame));
     				detector.process("Optimisation");
+    				
+    				if(compteur%1 == 0){
+    				listeDePoints=detector.getListPoints();
+    				cercle.ransac(listeDePoints, "Optimis�");
+    				}
+    				
     				edges = detector.getEdgesImage();
     				
     				ImageIcon image0 = new ImageIcon(edges);
     	            label0.setIcon(image0);
     	            label0.repaint();
     				
-    				ImageIcon image1 = new ImageIcon(Mat2bufferedImage(imag));
+    	            if(compteur%1 == 0){
+    	          //Definir le meilleur cercle
+    	    		Circle bestCircle = cercle.getBestCircle();
+    	    		x = bestCircle.circleCenter().getX();
+    	    		y = bestCircle.circleCenter().getY();
+    	    		r = (int) bestCircle.radius();
+    	            }
+    	    	
+    	    			
+    	    		
+    	    	//Dessine le cercle obtenu
+    	    		BufferedImage imag0 = Mat2bufferedImage(imag);
+    	    		if(100<r && r<200 && Math.abs(x-xsaved)<100)
+    	    			imageProcessor.drawCircle(imag0, x, frame.height() - y, r);
+    	    		
+    	    		if(compteur%1 == 0){
+    	    		xsaved = x;
+    	    		ysaved = y;
+    	    		}
+    	    		
+    				ImageIcon image1 = new ImageIcon(imag0);
     	            label1.setIcon(image1);
-    	            label1.repaint();    	            
+    	            label1.repaint();
+    	            
                 }
             }
             i = 1;
                         
-            
+           compteur++; 
         }
     }
  

@@ -35,8 +35,8 @@ public class Test {
 		//Choix du format de sortie
 		String format = new String(".png");
 		
-		String formatInitial = new String(".jpg");
-		String imageACharger = new String("table_tournesol_vue_de_dessus");
+		String formatInitial = new String(".JPG");
+		String imageACharger = new String("IMG_0862");
 		String imageContours = new String("imageContours_1");
 		String imageDetectionObjTable = new String("imageContours_2");
 		String imageTraceCercle = new String("imageTraceCercle");
@@ -60,7 +60,7 @@ public class Test {
 		ArrayList<Point> listeDePoints = new ArrayList<Point>();
 		listeDePoints=SobelEdgeDetector.getListPoints();
 		long start = System.currentTimeMillis();
-		cercle.ransac(listeDePoints, "Naif");
+		cercle.ransac(listeDePoints, "Optimisé");
 		long duree = System.currentTimeMillis() - start;
 		System.out.println("Execution time of RANSAC:" + duree/1000 + "s");
 		

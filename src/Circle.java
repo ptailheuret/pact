@@ -221,7 +221,7 @@ public class Circle {
 				listeCercles.add(cercle);
 				listeNombreInliners.add(A.nombreInliners(listePoints));
 		}
-		else
+		else if(j>1000)
 			arret=1;
 		j++;
 	}
