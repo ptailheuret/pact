@@ -1,4 +1,3 @@
-//import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -9,10 +8,12 @@ public class SobelEdgeDetectorLive {
 	private int picsize;
 	private int gradlvl;
 	private int nbpoints;
-	private int cercleTrace;
+	private boolean cercleTrace; // true if ransac algo has been applied
 
 	private int[] data;
 	private int[] magnitude;
+	private int[] circleMagnitude;
+
 	private BufferedImage sourceImage;
 	private BufferedImage edgesImage;
 	private boolean contrastNormalized;
@@ -65,24 +66,28 @@ public class SobelEdgeDetectorLive {
 		return nbpoints;
 	}
 
-	public void setCercleTrace(int trace) {
+	public void setCercleTrace(boolean trace) {
 		cercleTrace = trace;
 	}
 
 	/********************************/
-	/********* Les méthodes ********/
+	/********* Methods **************/
 	/*******************************/
 
 	public void process(String value) {
 		width = sourceImage.getWidth();
 		height = sourceImage.getHeight();
 		picsize = width * height;
+		listeDePoints = new ArrayList<Point>();
 		initArrays();
 		readLuminance();
 		if (contrastNormalized)
 			normalizeContrast();
 		computeGradients(value);
-		writeEdges(magnitude);
+		if (cercleTrace)
+			writeEdges(circleMagnitude);
+		else
+			writeEdges(magnitude);
 	}
 
 	private void initArrays() {
@@ -90,10 +95,17 @@ public class SobelEdgeDetectorLive {
 			data = new int[picsize];
 			magnitude = new int[picsize];
 			gradientMag = new float[picsize];
+			circleMagnitude = new int[picsize];
 		}
 	}
 
-	// Calcul des gradients
+	/**
+	 * Gradient computing using Sobel Filter
+	 * 
+	 * 
+	 * 
+	 * @param value
+	 */
 	private void computeGradients(String value) {
 		int i, j, nrows, ncols, img[][];
 		double Gx[][], Gy[][], G[][];
@@ -117,19 +129,15 @@ public class SobelEdgeDetectorLive {
 				if (i == 0 || i == nrows - 1 || j == 0 || j == ncols - 1) {
 					Gx[i][j] = Gy[i][j] = G[i][j] = 0; // Limites de l'image
 				} else {
-					Gx[i][j] = img[i + 1][j - 1] + 2 * img[i + 1][j]
-							+ img[i + 1][j + 1] - img[i - 1][j - 1] - 2
-							* img[i - 1][j] - img[i - 1][j + 1];
-					Gy[i][j] = img[i - 1][j + 1] + 2 * img[i][j + 1]
-							+ img[i + 1][j + 1] - img[i - 1][j - 1] - 2
-							* img[i][j - 1] - img[i + 1][j - 1];
+					Gx[i][j] = img[i + 1][j - 1] + 2 * img[i + 1][j] + img[i + 1][j + 1]
+							- img[i - 1][j - 1] - 2 * img[i - 1][j] - img[i - 1][j + 1];
+					Gy[i][j] = img[i - 1][j + 1] + 2 * img[i][j + 1] + img[i + 1][j + 1]
+							- img[i - 1][j - 1] - 2 * img[i][j - 1] - img[i + 1][j - 1];
 
 					if (value == "Naif")
-						G[i][j] = Math.hypot(Math.abs(Gx[i][j]),
-								Math.abs(Gy[i][j]));
+						G[i][j] = Math.hypot(Math.abs(Gx[i][j]), Math.abs(Gy[i][j]));
 					else if (value == "Approximation")
-						G[i][j] = 0.5 * Math.abs(Gx[i][j]) + 0.5
-								* Math.abs(Gy[i][j]);
+						G[i][j] = 0.5 * Math.abs(Gx[i][j]) + 0.5 * Math.abs(Gy[i][j]);
 					else if (value == "Optimisation")
 						G[i][j] = Gx[i][j] * Gx[i][j] + Gy[i][j] * Gy[i][j];
 
@@ -137,9 +145,8 @@ public class SobelEdgeDetectorLive {
 
 					if (value == "Naif" || value == "Approximation") {
 						if (gradientMag[i * ncols + j] > gradlvl) {
-							magnitude[i * ncols + j] = (int) gradientMag[i
-									* ncols + j];
-							listeDePoints.add(new Point(j,height-i,0));
+							magnitude[i * ncols + j] = (int) gradientMag[i * ncols + j];
+							listeDePoints.add(new Point(j, height - i, 0));
 							nbpoints++;
 						} else
 							magnitude[i * ncols + j] = 0;
@@ -147,9 +154,8 @@ public class SobelEdgeDetectorLive {
 
 					if (value == "Optimisation") {
 						if (gradientMag[i * ncols + j] > gradlvl * gradlvl) {
-							magnitude[i * ncols + j] = (int) (Math
-									.sqrt(G[i][j]));
-							listeDePoints.add(new Point(j,height-i,0));
+							magnitude[i * ncols + j] = (int) (Math.sqrt(G[i][j]));
+							listeDePoints.add(new Point(j, height - i, 0));
 							nbpoints++;
 						} else
 							magnitude[i * ncols + j] = 0;
@@ -158,8 +164,34 @@ public class SobelEdgeDetectorLive {
 			}
 		}
 
-		System.out
-				.println("Nombre de points issu de la d�tection de contours");
+		if (cercleTrace) {
+
+			int x = 0, y = 0;
+			double radius = 0, r = 0, angle = 0;
+			nbpoints = 0;
+
+			// Circle cercle=new Circle();
+			// Circle bestCircle = cercle.getBestCircle();
+			// x = bestCircle.circleCenter().getX();
+			// y = bestCircle.circleCenter().getY();
+			// radius = bestCircle.radius();
+
+			x = 640 / 2;
+			y = 480 / 2;
+			radius = 200;
+
+			for (r = 0; r < 0.85 * radius; r = r + 1) {
+				for (angle = 0; angle < 360; angle = angle + 1) {
+
+					i = y - (int) Math.round((r * Math.sin(angle * 180 / Math.PI)));
+					j = x + (int) Math.round((r * Math.cos(angle * 180 / Math.PI)));
+
+					circleMagnitude[i * ncols + j] = magnitude[i * ncols + j];
+				}
+			}
+		}
+
+		System.out.println("Nombre de points issu de la d�tection de contours");
 		System.out.println(nbpoints);
 		System.out.println();
 		System.out.println("Niveau de gradient");
@@ -198,10 +230,8 @@ public class SobelEdgeDetectorLive {
 	// Lire la luminance de l'image
 	private void readLuminance() {
 		int type = sourceImage.getType();
-		if (type == BufferedImage.TYPE_INT_RGB
-				|| type == BufferedImage.TYPE_INT_ARGB) {
-			int[] pixels = (int[]) sourceImage.getData().getDataElements(0, 0,
-					width, height, null);
+		if (type == BufferedImage.TYPE_INT_RGB || type == BufferedImage.TYPE_INT_ARGB) {
+			int[] pixels = (int[]) sourceImage.getData().getDataElements(0, 0, width, height, null);
 			for (int i = 0; i < picsize; i++) {
 				int p = pixels[i];
 				int r = (p & 0xff0000) >> 16;
@@ -210,20 +240,20 @@ public class SobelEdgeDetectorLive {
 				data[i] = luminance(r, g, b);
 			}
 		} else if (type == BufferedImage.TYPE_BYTE_GRAY) {
-			byte[] pixels = (byte[]) sourceImage.getData().getDataElements(0,
-					0, width, height, null);
+			byte[] pixels = (byte[]) sourceImage.getData().getDataElements(0, 0, width, height,
+					null);
 			for (int i = 0; i < picsize; i++) {
 				data[i] = (pixels[i] & 0xff);
 			}
 		} else if (type == BufferedImage.TYPE_USHORT_GRAY) {
-			short[] pixels = (short[]) sourceImage.getData().getDataElements(0,
-					0, width, height, null);
+			short[] pixels = (short[]) sourceImage.getData().getDataElements(0, 0, width, height,
+					null);
 			for (int i = 0; i < picsize; i++) {
 				data[i] = (pixels[i] & 0xffff) / 256;
 			}
 		} else if (type == BufferedImage.TYPE_3BYTE_BGR) {
-			byte[] pixels = (byte[]) sourceImage.getData().getDataElements(0,
-					0, width, height, null);
+			byte[] pixels = (byte[]) sourceImage.getData().getDataElements(0, 0, width, height,
+					null);
 			int offset = 0;
 			for (int i = 0; i < picsize; i++) {
 				int b = pixels[offset++] & 0xff;
@@ -232,18 +262,15 @@ public class SobelEdgeDetectorLive {
 				data[i] = luminance(r, g, b);
 			}
 		} else {
-			throw new IllegalArgumentException("Unsupported image type: "
-					+ type);
+			throw new IllegalArgumentException("Unsupported image type: " + type);
 		}
 	}
 
 	private void writeEdges(int pixels[]) {
 		if (edgesImage == null) {
-			edgesImage = new BufferedImage(width, height,
-					BufferedImage.TYPE_INT_BGR);
+			edgesImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
 		}
-		edgesImage.getWritableTile(0, 0).setDataElements(0, 0, width, height,
-				pixels);
+		edgesImage.getWritableTile(0, 0).setDataElements(0, 0, width, height, pixels);
 
 	}
 
