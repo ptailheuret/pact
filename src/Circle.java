@@ -178,7 +178,7 @@ public class Circle {
 	ArrayList<Circle> listeCercles = new ArrayList<Circle>();
 	ArrayList<Integer> listeNombreInliners = new ArrayList<Integer>();
 	Circle cercle = null;
-	Circle meilleurCercle;
+	Circle meilleurCercle = null;
 	
 	
 	while(j<nombreDIterations && arret==0){
@@ -221,7 +221,7 @@ public class Circle {
 				listeCercles.add(cercle);
 				listeNombreInliners.add(nombreInliners(listePoints));
 		}
-		else if(j>300)
+		else if(j>200)
 			arret=1;
 		j++;
 	}

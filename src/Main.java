@@ -15,10 +15,14 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
 
 public class Main {
 
@@ -45,9 +49,9 @@ public class Main {
 		jframe.setVisible(true);
 
 		Mat frame = new Mat();
-		Size sz = new Size(640*0.8, 480*0.8);
+		Size sz = new Size(640 * 2, 480 * 2);
 
-		JFrame jframe1 = new JFrame("DETECTION DE CONTOURS POUR LES TRISOMIQUES 2");
+		JFrame jframe1 = new JFrame("AFFICHAGE STANDARD");
 		jframe1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JLabel label1 = new JLabel();
 		jframe1.setContentPane(label1);
@@ -56,11 +60,10 @@ public class Main {
 
 		VideoCapture camera = new VideoCapture(0);
 		int i = 0;
-		int x = 0;
-		int y = 0;
-		int r = 0;
-		int xsaved = 0;
-		int ysaved = 0;
+
+		
+		 int x = 0; int y = 0; int r = 0; int xsaved = 0; int ysaved = 0;
+		 
 
 		// Creer les objets
 		SobelEdgeDetectorLive detector = new SobelEdgeDetectorLive();
@@ -71,11 +74,11 @@ public class Main {
 		ArrayList<Point> listeDePoints = new ArrayList<Point>();
 
 		// Distance au cercle pour Ãªtre inliner
-		cercle.setDistanceInliners(100);
+		cercle.setDistanceInliners(40);
 
 		// Nombre d'inliners suffisant pour arrÃªter
-		cercle.setNombreInliners(1000);
-		cercle.setNombreDIterations(1500);
+		cercle.setNombreInliners(5000);
+		cercle.setNombreDIterations(1000);
 		// Niveau de gradient
 		detector.setGradientLevel(100);
 		detector.setCercleTrace(false);
@@ -92,6 +95,7 @@ public class Main {
 				if (i == 0) {
 					jframe.setSize(frame.width(), frame.height());
 					jframe1.setSize(imag.width(), imag.height());
+					jframe1.setLocation(jframe.getWidth(), 0);
 					// detector.setSourceImage(Mat2bufferedImage(frame));
 					// detector.process("Optimisation");
 
@@ -104,30 +108,29 @@ public class Main {
 					detector.process("Optimisation");
 
 					listeDePoints = SobelEdgeDetectorLive.getListPoints();
-					// cercle.ransac(listeDePoints, "Optimisé");
+					//$cercle.ransac(listeDePoints, "Optimisé");
 
 					edges = detector.getEdgesImage();
-
 					ImageIcon image0 = new ImageIcon(edges);
 					label0.setIcon(image0);
 					label0.repaint();
 
-					/*
-					 * if(compteur%1 == 0){ //Definir le meilleur cercle Circle
-					 * bestCircle = cercle.getBestCircle(); x =
-					 * bestCircle.circleCenter().getX(); y =
-					 * bestCircle.circleCenter().getY(); r = (int)
-					 * bestCircle.radius(); }
-					 * 
-					 * 
-					 * 
-					 * //Dessine le cercle obtenu BufferedImage imag0 =
-					 * Mat2bufferedImage(imag); if(100<r && r<200 &&
-					 * Math.abs(x-xsaved)<100) imageProcessor.drawCircle(imag0,
-					 * x, frame.height() - y, r);
-					 * 
-					 * if(compteur%1 == 0){ xsaved = x; ysaved = y; }
-					 */
+
+				/*	//Definir le meilleur cercle Circle
+					 Circle bestCircle = cercle.getBestCircle(); 
+					 x = bestCircle.circleCenter().getX(); 
+					 y = bestCircle.circleCenter().getY(); 
+					 r = (int) bestCircle.radius();
+					  
+					  
+					  
+					 //Dessine le cercle obtenu 
+					BufferedImage imag1 = Mat2bufferedImage(imag); 
+					if(10<r && r<200 && Math.abs(x-xsaved)<200)
+						imageProcessor.drawCircle(imag1, x, frame.height() - y, r);
+					 
+					xsaved = x; ysaved = y;*/
+
 
 					BufferedImage imag1 = Mat2bufferedImage(imag);
 					ImageIcon image1 = new ImageIcon(imag1);
