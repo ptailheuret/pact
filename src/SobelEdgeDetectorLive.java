@@ -170,23 +170,20 @@ public class SobelEdgeDetectorLive {
 			double radius = 0, r = 0, angle = 0;
 			nbpoints = 0;
 
-			// Circle cercle=new Circle();
-			// Circle bestCircle = cercle.getBestCircle();
-			// x = bestCircle.circleCenter().getX();
-			// y = bestCircle.circleCenter().getY();
-			// radius = bestCircle.radius();
-
-			x = 640 / 2;
-			y = 480 / 2;
-			radius = 200;
+			 Circle bestCircle = ImageProcessor.getBestCircle();
+			 x = bestCircle.circleCenter().getX();
+			 y = bestCircle.circleCenter().getY();
+			 radius = bestCircle.radius();
 
 			for (r = 0; r < 0.85 * radius; r = r + 1) {
-				for (angle = 0; angle < 360; angle = angle + 1) {
+				for (angle = 0; angle < 360; angle = angle + 0.1) {
 
 					i = y - (int) Math.round((r * Math.sin(angle * 180 / Math.PI)));
 					j = x + (int) Math.round((r * Math.cos(angle * 180 / Math.PI)));
 
 					circleMagnitude[i * ncols + j] = magnitude[i * ncols + j];
+					if(circleMagnitude[i * ncols + j]>0)
+						nbpoints++;
 				}
 			}
 		}
